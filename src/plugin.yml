@@ -1,0 +1,9 @@
+name: SkywarsUtils
+version: 2019-0.1
+main: me.PauMAVA.SkywarsUtils.Core
+description: Utilities to build skywars maps
+api-version: 1.14
+
+commands:
+  islands:
+    description: Create a set of islands
