@@ -30,8 +30,8 @@ public class Core extends JavaPlugin {
         instance = this;
         islandCreator = new IslandCreator();
         this.getCommand("islands").setExecutor(islandCreator);
-        this.getCommand("undo").setExecutor(new Undoer()
-        );
+        this.getCommand("undo").setExecutor(new Undoer());
+        this.getCommand("getchests").setExecutor(new ChestCounter());
     }
 
     @Override
