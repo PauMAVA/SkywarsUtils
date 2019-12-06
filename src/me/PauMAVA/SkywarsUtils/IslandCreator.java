@@ -89,15 +89,22 @@ public class IslandCreator implements CommandExecutor {
                     sendMessage(theSender, ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_PURPLE + "SkywarsUtils" + ChatColor.GRAY + "] " + ChatColor.RESET + ChatColor.AQUA + "Modified " + modifyCount + " blocks.");
                     break;
                 }
-                case "hsphere": {
+                case "islandbottom": {
                     for(Location origin: islandCenters) {
-                        modifyCount += spawnHollowSphere(origin, material, islandSize);
+                        modifyCount += spawnIslandBottom(origin, material, islandSize);
+                    }
+                    sendMessage(theSender, ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_PURPLE + "SkywarsUtils" + ChatColor.GRAY + "] " + ChatColor.RESET + ChatColor.AQUA + "Modified " + modifyCount + " blocks.");
+                    break;
+                }
+                case "hislandbottom": {
+                    for(Location origin: islandCenters) {
+                        modifyCount += spawnHollowIslandBottom(origin, material, islandSize);
                     }
                     sendMessage(theSender, ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_PURPLE + "SkywarsUtils" + ChatColor.GRAY + "] " + ChatColor.RESET + ChatColor.AQUA + "Modified " + modifyCount + " blocks.");
                     break;
                 }
                 default: {
-                    sendMessage(theSender, ChatColor.RED + "The option \'" + type + "\' is not supported. Supported options: cube, sphere, hcube, hsphere");
+                    sendMessage(theSender, ChatColor.RED + "The option \'" + type + "\' is not supported. Supported options: cube, sphere, hcube, islandbottom, hislandbottom");
                     break;
                 }
             }
@@ -179,9 +186,43 @@ public class IslandCreator implements CommandExecutor {
         return modifiedBlocks;
     }
 
-    private Integer spawnHollowSphere(Location origin, Material material, Integer radius) {
+    private Integer spawnIslandBottom(Location origin, Material material, Integer radius) {
         Integer modifiedBlocks = 0;
+        for(int i = 0; i < radius; radius--) {
+            origin.setY(origin.getY() - 1);
+            modifiedBlocks += makeCircle(origin,material, radius);
+        }
+        return modifiedBlocks;
+    }
 
+    private Integer spawnHollowIslandBottom(Location origin, Material material, Integer radius) {
+        Integer modifiedBlocks = 0;
+        for(int i = 0; i < radius; radius--) {
+            origin.setY(origin.getY() - 1);
+            modifiedBlocks += makeHollowCircle(origin,material, radius);
+        }
+        return modifiedBlocks;
+    }
+
+    private Integer makeHollowCircle(Location origin, Material material, Integer radius) {
+        Integer modifiedBlocks = 0;
+        for (double i = 0.0; i < 360.0; i += 0.1) {
+            double angle = i * Math.PI / 180;
+            Location block = new Location(Core.getInstance().getWorld(), (int)(origin.getX() + radius * Math.cos(angle)), origin.getY(), (int)(origin.getZ() + radius * Math.sin(angle)));
+            block.getBlock().setType(material);
+        }
+        return modifiedBlocks;
+    }
+
+    private Integer makeCircle(Location origin, Material material, Integer radius) {
+        Integer modifiedBlocks = 0;
+        for (int j = 0; j < radius; radius--) {
+            for (double i = 0.0; i < 360.0; i += 0.1) {
+                double angle = i * Math.PI / 180;
+                Location block = new Location(Core.getInstance().getWorld(), (int)(origin.getX() + radius * Math.cos(angle)), origin.getY(), (int)(origin.getZ() + radius * Math.sin(angle)));
+                block.getBlock().setType(material);
+            }
+        }
         return modifiedBlocks;
     }
 
@@ -196,5 +237,4 @@ public class IslandCreator implements CommandExecutor {
         }
         return locations;
     }
-
 }
