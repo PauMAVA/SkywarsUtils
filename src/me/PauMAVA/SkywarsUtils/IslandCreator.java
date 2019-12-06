@@ -16,20 +16,26 @@
 
 package me.PauMAVA.SkywarsUtils;
 
+import net.minecraft.server.v1_14_R1.Blocks;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.Hash;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class IslandCreator implements CommandExecutor {
+
+    private HashMap<Location, Material> lastState = new HashMap<Location, Material>();
 
     /* COMMAND USAGE: /islands <count> <radius> <type> <size> [material]
     * String args:
@@ -64,7 +70,6 @@ public class IslandCreator implements CommandExecutor {
             circleRadius = Integer.parseInt(args[1]);
             type = args[2];
             islandSize = Integer.parseInt(args[3]);
-            Bukkit.broadcastMessage("Args 0: " + args[0] + "\n" + "Args 1: " + args[1] + "\n" + "Args 2: " + args[2] + "\n" + "Args 3: " + args[3] + "\n");
             List<Location> islandCenters = getLocations(((Player) theSender).getLocation(), islandCount, circleRadius);
             Integer modifyCount = 0;
             switch (type) {
@@ -131,6 +136,7 @@ public class IslandCreator implements CommandExecutor {
                 /* Iterate over each block */
                 for (int k = -radius; k < radius; k++) {
                     Location block = new Location(Core.getInstance().getWorld(), origin.getX() + k, origin.getY() + i, origin.getZ() + j);
+                    lastState.put(block, block.getBlock().getType());
                     block.getBlock().setType(material);
                     modifiedBlocks++;
                 }
@@ -146,7 +152,9 @@ public class IslandCreator implements CommandExecutor {
                 for (int z = (int)origin.getZ() - radius; z <= origin.getZ() + radius; z++) {
                     if ((origin.getX() - x) * (origin.getX() - x) + (origin.getY() - y) * (origin.getY() - y) + (origin.getZ() - z) * (origin.getZ() - z) <= (radius * radius)) {
                         Location block = new Location(Core.getInstance().getWorld(), x, y, z);
+                        lastState.put(block, block.getBlock().getType());
                         block.getBlock().setType(material);
+                        modifiedBlocks++;
                     }
                 }
             }
@@ -165,6 +173,7 @@ public class IslandCreator implements CommandExecutor {
                     /* Iterate over each block */
                     for (int k = -radius; k < radius; k++) {
                         Location block = new Location(Core.getInstance().getWorld(), origin.getX() + k, origin.getY() + i, origin.getZ() + j);
+                        lastState.put(block, block.getBlock().getType());
                         block.getBlock().setType(material);
                         modifiedBlocks++;
                     }
@@ -176,6 +185,7 @@ public class IslandCreator implements CommandExecutor {
                     for (int k = -radius; k < radius; k++) {
                         if (k == -radius || k == radius -1 || j == radius - 1 ||j == -radius) {
                             Location block = new Location(Core.getInstance().getWorld(), origin.getX() + k, origin.getY() + i, origin.getZ() + j);
+                            lastState.put(block, block.getBlock().getType());
                             block.getBlock().setType(material);
                             modifiedBlocks++;
                         }
@@ -209,6 +219,7 @@ public class IslandCreator implements CommandExecutor {
         for (double i = 0.0; i < 360.0; i += 0.1) {
             double angle = i * Math.PI / 180;
             Location block = new Location(Core.getInstance().getWorld(), (int)(origin.getX() + radius * Math.cos(angle)), origin.getY(), (int)(origin.getZ() + radius * Math.sin(angle)));
+            lastState.put(block, block.getBlock().getType());
             block.getBlock().setType(material);
         }
         return modifiedBlocks;
@@ -220,6 +231,7 @@ public class IslandCreator implements CommandExecutor {
             for (double i = 0.0; i < 360.0; i += 0.1) {
                 double angle = i * Math.PI / 180;
                 Location block = new Location(Core.getInstance().getWorld(), (int)(origin.getX() + radius * Math.cos(angle)), origin.getY(), (int)(origin.getZ() + radius * Math.sin(angle)));
+                lastState.put(block, block.getBlock().getType());
                 block.getBlock().setType(material);
             }
         }
@@ -236,5 +248,13 @@ public class IslandCreator implements CommandExecutor {
             angle += 360D/islandCount;
         }
         return locations;
+    }
+
+    HashMap<Location, Material> getLastState() {
+        return this.lastState;
+    }
+
+    void resetLastState() {
+        this.lastState = new HashMap<Location, Material>();
     }
 }

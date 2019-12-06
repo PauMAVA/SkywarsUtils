@@ -23,11 +23,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Core extends JavaPlugin {
 
     private static Core instance;
+    private IslandCreator islandCreator;
 
     @Override
     public void onEnable() {
         instance = this;
-        this.getCommand("islands").setExecutor(new IslandCreator());
+        islandCreator = new IslandCreator();
+        this.getCommand("islands").setExecutor(islandCreator);
+        this.getCommand("undo").setExecutor(new Undoer()
+        );
     }
 
     @Override
@@ -43,4 +47,7 @@ public class Core extends JavaPlugin {
         return this.getServer().getWorlds().get(0);
     }
 
+    IslandCreator getIslandCreator() {
+        return this.islandCreator;
+    }
 }

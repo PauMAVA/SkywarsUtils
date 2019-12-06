@@ -7,3 +7,5 @@ api-version: 1.14
 commands:
   islands:
     description: Create a set of islands
+  undo:
+    description: Undo the last edit
