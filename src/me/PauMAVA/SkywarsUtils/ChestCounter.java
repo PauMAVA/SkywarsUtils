@@ -43,6 +43,7 @@ public class ChestCounter implements CommandExecutor {
         sendMessage(theSender, ChatColor.GRAY + "" + ChatColor.BOLD + "[" + ChatColor.DARK_PURPLE + "SkywarsUtils" + ChatColor.GRAY + "] " + ChatColor.RESET + ChatColor.AQUA + "Chests found: ");
         for (Location l: chests) {
             sendMessage(theSender, (int) l.getX() + ", " + (int) l.getY() + ", " + (int) l.getZ());
+            Core.getInstance().getLogger().info((int) l.getX() + ", " + (int) l.getY() + ", " + (int) l.getZ());
         }
         return false;
     }

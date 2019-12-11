@@ -221,6 +221,7 @@ public class IslandCreator implements CommandExecutor {
             Location block = new Location(Core.getInstance().getWorld(), (int)(origin.getX() + radius * Math.cos(angle)), origin.getY(), (int)(origin.getZ() + radius * Math.sin(angle)));
             lastState.put(block, block.getBlock().getType());
             block.getBlock().setType(material);
+            modifiedBlocks++;
         }
         return modifiedBlocks;
     }
@@ -233,6 +234,7 @@ public class IslandCreator implements CommandExecutor {
                 Location block = new Location(Core.getInstance().getWorld(), (int)(origin.getX() + radius * Math.cos(angle)), origin.getY(), (int)(origin.getZ() + radius * Math.sin(angle)));
                 lastState.put(block, block.getBlock().getType());
                 block.getBlock().setType(material);
+                modifiedBlocks++;
             }
         }
         return modifiedBlocks;
