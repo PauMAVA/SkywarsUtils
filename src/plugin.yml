@@ -7,7 +7,7 @@ api-version: 1.14
 commands:
   islands:
     description: Create a set of islands
-  undo:
+  restore:
     description: Undo the last edit
   getchests:
     description: Fetches the coords of all chests in map

@@ -20,6 +20,8 @@ import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
+
 public class Core extends JavaPlugin {
 
     private static Core instance;
@@ -30,8 +32,15 @@ public class Core extends JavaPlugin {
         instance = this;
         islandCreator = new IslandCreator();
         this.getCommand("islands").setExecutor(islandCreator);
-        this.getCommand("undo").setExecutor(new Undoer());
+        this.getCommand("restore").setExecutor(new Undoer());
         this.getCommand("getchests").setExecutor(new ChestCounter());
+        createFolder();
+    }
+
+    private void createFolder() {
+        if (!this.getDataFolder().exists()) {
+            this.getDataFolder().mkdirs();
+        }
     }
 
     @Override
